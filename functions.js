@@ -52,19 +52,13 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
   let s_head = document.querySelector('.s_head');
-  const draggable = document.querySelectorAll('.draggable');
+
+  s.onmousedown = function() {
+    return false;
+  };
+
   
-  draggable.forEach(function(element) {
-
-      
-      element.onmousedown = function() {
-        return false;
-      };
-      element.addEventListener('mousedown', sHeadMousedownHandler);
-    
-
-  });
-
+  s.addEventListener('mousedown', sHeadMousedownHandler);
 
   function sHeadMousedownHandler(event) {
     if (!event.target) {
