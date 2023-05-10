@@ -52,51 +52,60 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
   let s_head = document.querySelector('.s_head');
-
-  s.onmousedown = function() {
-    return false;
-  };
-
+  const draggable = document.querySelectorAll('.draggable');
   
-  s.addEventListener('mousedown', sHeadMousedownHandler);
+  draggable.forEach(function(element) {
 
-  function sHeadMousedownHandler(event) {
-    if (!event.target) {
-      return;
-    }
-   if (event.button !== 0) {
-     //console.log(event.target);
-     return
-    } else {
-      let s_head_rect = s_head.getBoundingClientRect();
-
-      const cusrsor_init = {
-        x: event.pageX,
-        y: event.pageY
-      }
-
-      //console.log(s_head_rect);
-  
-      let my_event = new Event("delete-up-and-move");
       
+      element.onmousedown = function() {
+        return false;
+      };
+      element.addEventListener('mousedown', sHeadMousedownHandler);
 
-      const sMove = { handleEvent: sHeadMouseMoveHandler, s_head_rect, cusrsor_init};
+      function sHeadMousedownHandler(event) {
+        if (!event.target) {
+          return;
+        }
+       if (event.button !== 0) {
+         return
+        } else {
+          //console.log(event.target);
+    
+          let cur_drag_dom_obj = event.target.closest(".draggable");
+          let s_head_rect = cur_drag_dom_obj.getBoundingClientRect();
+    
+          const cusrsor_init = {
+            x: event.pageX,
+            y: event.pageY
+          }
+    
+          //console.log(s_head_rect);
+      
+          let my_event = new Event("delete-up-and-move");
+          
+    
+          const sMove = { handleEvent: sHeadMouseMoveHandler, s_head_rect, cusrsor_init, cur_drag_dom_obj};
+    
+          const sUp = { handleEvent: sHeadMouseUpHandler, my_event: my_event, cur_drag_dom_obj };
+    
+          const sThree = { handleEvent: deleteMoveAndUpHandler, sMove, sUp: sUp };
+    
+          document.addEventListener("mousemove", sMove);
+          document.addEventListener("mouseup", sUp);
+          document.addEventListener("delete-up-and-move", sThree);
+    
+        }
+      }
+    
 
-      const sUp = { handleEvent: sHeadMouseUpHandler, my_event: my_event };
 
-      const sThree = { handleEvent: deleteMoveAndUpHandler, sMove, sUp: sUp };
-
-      document.addEventListener("mousemove", sMove);
-      document.addEventListener("mouseup", sUp);
-      document.addEventListener("delete-up-and-move", sThree);
-
-    }
-  }
+  });
 
   function sHeadMouseMoveHandler(event) {
+    //console.log(this.ev_obj);
     screenLog.innerText = `${event.pageX} ${event.pageY}`;
-    s.style.left = this.s_head_rect.left + (event.pageX - this.cusrsor_init.x) + 'px';
-    s.style.top = this.s_head_rect.top + (event.pageY - this.cusrsor_init.y) + 'px';
+    this.cur_drag_dom_obj.style.left = this.s_head_rect.left + (event.pageX - this.cusrsor_init.x) + 'px';
+    this.cur_drag_dom_obj.style.top = this.s_head_rect.top + (event.pageY - this.cusrsor_init.y) + 'px';
 
     console.log(this.s_head_rect.left, this.s_head_rect.top, this.cusrsor_init.x, this.cusrsor_init.y);
   }
@@ -113,6 +122,7 @@ document.addEventListener("DOMContentLoaded", function() {
     document.removeEventListener("mousemove", this.sMove);
     document.removeEventListener("mouseup", this.sUp);
   }
+
 
   drums_list_add_item_btn = document.querySelector('.drums_list_add_item_btn');
   this.addEventListener('click', function() {
