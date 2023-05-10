@@ -20,7 +20,7 @@
     <div class="s_head">drums_ui</div>
   </div>
 
-  <div class="modal draggable">
+  <div class="modal draggable drum_seq_instr" data-state="inactive">
     <div class="modal_head">instruments</div>
   </div>
 

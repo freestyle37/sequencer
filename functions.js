@@ -125,8 +125,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
   drums_list_add_item_btn = document.querySelector('.drums_list_add_item_btn');
-  this.addEventListener('click', function() {
-
+  drums_list_add_item_btn.addEventListener('click', function(event) {
+    
+    let drum_seq_instr = document.querySelector(".drum_seq_instr");
+    if (drum_seq_instr) {
+      if (drum_seq_instr.getAttribute('data-state') === 'inactive') {
+        drum_seq_instr.setAttribute('data-state', 'active');
+        drum_seq_instr.style.left = event.pageX - 50 + 'px';
+        drum_seq_instr.style.top = event.pageY - 100 + 'px';
+      }
+    }
   });
 
 });
